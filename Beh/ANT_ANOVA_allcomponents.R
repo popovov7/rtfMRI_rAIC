@@ -1,0 +1,883 @@
+###### Script to analyse the ANT ######
+
+### Libraries
+library(tidyverse) 
+library(here)
+library(viridis)
+library(patchwork)
+source('rtfmri_theme2.R')
+source('rtfmri_theme.R')
+
+path = 'C:/Users/Jeane/Documents/PhD/Behavior_Analysis/ANTwrongName/'
+
+bids_folder =  'C:/Users/Jeane/Documents/PhD/Behavior_Analysis/'
+
+
+### Messy naming conventions up to participant 12 
+
+## Manual wrangling
+
+## VP001
+
+sub.vp001.ses.01.pant <- read_csv(file = paste(path,'VP001_01/ANT-VP001_01.csv', sep = ''))%>% 
+  mutate(subid = 'VP001',
+         session = '1')
+
+sub.vp001.ses.03.pant <- read_csv(file = paste(path,'VP001_03/ANT-VP001_03.csv', sep = '')) %>% 
+  mutate(subid = 'VP001',
+         session = '3')
+
+sub.vp001.ses.04.pant <- read_csv(file = paste(path,'VP001_04/ANT-VP001_04.csv', sep = ''))[313:624,] %>% 
+  mutate(subid = 'VP001',
+         session = '4')
+
+sub.vp001 <- bind_rows(sub.vp001.ses.01.pant,sub.vp001.ses.03.pant,sub.vp001.ses.04.pant) 
+
+## VP002
+
+sub.vp002.ses.01.pant <- read_csv(file = paste(path,'VP002_01/ANT-VP002_01.csv', sep = '')) %>% 
+  mutate(subid = 'VP002',
+         session = '1')
+
+sub.vp002.ses.03.pant <- read_csv(file = paste(path,'VP002_03/ANT-VP002_03.csv', sep = '')) %>% 
+  mutate(subid = 'VP002',
+         session = '3')
+
+sub.vp002.ses.04.pant <- read_csv(file = paste(path,'VP002_04//ANT-VP002_04.csv', sep = '')) %>% 
+  mutate(subid = 'VP002',
+         session = '4')
+
+sub.vp002 <- bind_rows(sub.vp002.ses.01.pant,sub.vp002.ses.03.pant,sub.vp002.ses.04.pant) 
+
+## VP003
+
+sub.vp003.ses.01.pant <- read_csv(file = paste(path,'VP003_01/ANT-VP003_1_final.csv', sep = '')) %>% 
+  mutate(subid = 'VP003',
+         session = '1')
+
+sub.vp003.ses.03.pant <- read_csv(file = paste(path,'VP003_03/ANT-VP003_Post.csv', sep = '')) %>% 
+  mutate(subid = 'VP003',
+         session = '3')
+
+sub.vp003.ses.04.pant <- read_csv(file = paste(path,'VP003_04/ANT-VP003_04.csv', sep = '')) %>% 
+  mutate(subid = 'VP003',
+         session = '4')
+
+sub.vp003 <- bind_rows(sub.vp003.ses.01.pant,sub.vp003.ses.03.pant,sub.vp003.ses.04.pant) 
+
+## VP004
+
+sub.vp004.ses.01.pant <- read_csv(file = paste(path,'VP004_01/ANT-VP004.csv', sep = ''))[1:312,]  %>% 
+  mutate(subid = 'VP004',
+         session = '1')
+
+sub.vp004.ses.03.pant <- read_csv(file = paste(path,'VP004_03/ANT-VP004.csv', sep = ''))[313:624,]  %>% 
+  mutate(subid = 'VP004',
+         session = '3')
+
+sub.vp004.ses.04.pant <- read_csv(file = paste(path,'VP004_04/ANT-VP004_04.csv', sep = '')) %>% 
+  mutate(subid = 'VP004',
+         session = '4')
+
+sub.vp004 <- bind_rows(sub.vp004.ses.01.pant,sub.vp004.ses.03.pant,sub.vp004.ses.04.pant) 
+
+## VP005
+
+sub.vp005.ses.01.pant <- read_csv(file = paste(path,'VP005/session_03/behavior/pant/ANT-VP005.csv', sep = ''))[1:312,]  %>% 
+  mutate(subid = 'VP005',
+         session = '1')
+
+sub.vp005.ses.03.pant <- read_csv(file = paste(path,'VP005_03/ANT-VP005.csv', sep = ''))[313:624,]  %>% 
+  mutate(subid = 'VP005',
+         session = '3')
+
+sub.vp005.ses.04.pant <- read_csv(file = paste(path,'VP005_04/ANT-VP005_04.csv', sep = '')) %>% 
+  mutate(subid = 'VP005',
+         session = '4')
+
+
+sub.vp005 <- bind_rows(sub.vp005.ses.01.pant,sub.vp005.ses.04.pant) 
+
+## VP006
+
+sub.vp006.ses.01.pant <- read_csv(file = paste(path,'jVP006_1/ANT-jVP006_1.csv', sep = '')) %>% 
+  mutate(subid = 'VP006',
+         session = '1')
+
+sub.vp006.ses.03.pant <- read_csv(file = paste(path,'VP006_03/ANT-VP006_03.csv', sep = '')) %>% 
+  mutate(subid = 'VP006',
+         session = '3')
+
+sub.vp006.ses.04.pant <- read_csv(file = paste(path,'VP006_04/ANT-VP006_04.csv', sep = '')) %>% 
+  mutate(subid = 'VP006',
+         session = '4')
+
+
+sub.vp006 <- bind_rows(sub.vp006.ses.01.pant,sub.vp006.ses.03.pant, sub.vp006.ses.04.pant) 
+
+
+## VP007
+
+sub.vp007.ses.01.pant <- read_csv(file = paste(path,'VP007_01/ANT-VP007_01.csv', sep = '')) %>% 
+  mutate(subid = 'VP007',
+         session = '1')
+
+sub.vp007.ses.03.pant <- read_csv(file = paste(path,'VP007_02/ANT-VP007_02.csv', sep = '')) %>% 
+  mutate(subid = 'VP007',
+         session = '3')
+
+sub.vp007.ses.04.pant <- read_csv(file = paste(path,'VP007_04/ANT-VP007_04.csv', sep = '')) %>% 
+  mutate(subid = 'VP007',
+         session = '4')
+
+
+sub.vp007 <- bind_rows(sub.vp007.ses.01.pant,sub.vp007.ses.03.pant, sub.vp007.ses.04.pant) 
+
+## VP008
+
+sub.vp008.ses.01.pant <- read_csv(file = paste(path,'VP008_01/ANT-VP008_01.csv', sep = '')) %>% 
+  mutate(subid = 'VP008',
+         session = '1')
+
+sub.vp008.ses.03.pant <- read_csv(file = paste(path,'VP008_02/ANT-VP008_02.csv', sep = '')) %>% 
+  mutate(subid = 'VP008',
+         session = '3')
+
+sub.vp008.ses.04.pant <- read_csv(file = paste(path,'VP008_04/ANT-VP008_04.csv', sep = '')) %>% 
+  mutate(subid = 'VP008',
+         session = '4')
+
+sub.vp008 <- bind_rows(sub.vp008.ses.01.pant,sub.vp008.ses.03.pant, sub.vp008.ses.04.pant) 
+
+## VP009
+
+sub.vp009.ses.01.pant <- read_csv(file = paste(path,'VP009_01/ANT-VP009_01.csv', sep = '')) %>% 
+  mutate(subid = 'VP009',
+         session = '1')
+
+sub.vp009.ses.03.pant <- read_csv(file = paste(path,'VP009_02/ANT-VP009_02.csv', sep = '')) %>% 
+  mutate(subid = 'VP009',
+         session = '3')
+
+sub.vp009.ses.04.pant <- read_csv(file = paste(path,'VP009_04/ANT-VP009_04.csv', sep = '')) %>% 
+  mutate(subid = 'VP009',
+         session = '4')
+
+
+sub.vp009 <- bind_rows(sub.vp009.ses.01.pant,sub.vp009.ses.03.pant, sub.vp009.ses.04.pant) 
+
+
+## VP010
+
+sub.vp010.ses.01.pant <- read_csv(file = paste(path,'VP010_01/ANT-VP010_01.csv', sep = '')) %>% 
+  mutate(subid = 'VP010',
+         session = '1')
+
+sub.vp010.ses.03.pant <- read_csv(file = paste(path,'VP010_2/ANT-VP010_2.csv', sep = '')) %>% 
+  mutate(subid = 'VP010',
+         session = '3')
+
+sub.vp010.ses.04.pant <- read_csv(file = paste(path,'VP010_04/ANT-VP010_04.csv', sep = '')) %>% 
+  mutate(subid = 'VP010',
+         session = '4')
+
+sub.vp010 <- bind_rows(sub.vp010.ses.01.pant,sub.vp010.ses.03.pant, sub.vp010.ses.04.pant) 
+
+## VP011
+
+sub.vp011.ses.01.pant <- read_csv(file = paste(path,'VP011/ANT-VP011.csv', sep = '')) %>% 
+  mutate(subid = 'VP011',
+         session = '1')
+
+sub.vp011.ses.03.pant <- read_csv(file = paste(path,'VP011_02/ANT-VP011_02.csv', sep = '')) %>% 
+  mutate(subid = 'VP011',
+         session = '3')
+
+sub.vp011.ses.04.pant <- read_csv(file = paste(path,'VP011_04/ANT-VP011_04.csv', sep = '')) %>% 
+  mutate(subid = 'VP011',
+         session = '4')
+
+sub.vp011 <- bind_rows(sub.vp011.ses.01.pant,sub.vp011.ses.03.pant, sub.vp011.ses.04.pant) 
+
+## VP012
+
+sub.vp012.ses.01.pant <- read_csv(file = paste(path,'VP012_01/ANT-VP012_01.csv', sep = '')) %>% 
+  mutate(subid = 'VP012',
+         session = '1')
+
+sub.vp012.ses.03.pant <- read_csv(file = paste(path,'VP012_02/ANT-VP012_02.csv', sep = '')) %>% 
+  mutate(subid = 'VP012',
+         session = '3')
+sub.vp012.ses.04.pant <- read_csv(file = paste(path,'VP012_04/ANT-VP012_04.csv', sep = '')) %>% 
+  mutate(subid = 'VP012',
+         session = '4')
+
+sub.vp012 <- bind_rows(sub.vp012.ses.01.pant,sub.vp012.ses.03.pant,sub.vp012.ses.04.pant) 
+
+## VP013
+
+sub.vp013.ses.01.pant <- read_csv(file = paste(path,'VP013_01/ANT-VP013_01.csv', sep = '')) %>% 
+  mutate(subid = 'VP013',
+         session = '1')
+
+sub.vp013.ses.03.pant <- read_csv(file = paste(path,'VP013_02/ANT-VP013_03.csv', sep = '')) %>% 
+  mutate(subid = 'VP013',
+         session = '3')
+
+sub.vp013.ses.04.pant <- read_csv(file = paste(path,'VP013_04/ANT-VP013_04.csv', sep = '')) %>% 
+  mutate(subid = 'VP013',
+         session = '4')
+
+sub.vp013 <- bind_rows(sub.vp013.ses.01.pant,sub.vp013.ses.03.pant,sub.vp013.ses.04.pant) 
+
+
+## VP019
+
+sub.vp019.ses.01.pant <- read_csv(file = paste(path,'VP019_01/ANT-VP019_01.csv', sep = '')) %>% 
+  mutate(subid = 'VP019',
+         session = '1')
+
+sub.vp019.ses.03.pant <- read_csv(file = paste(path,'VP019_02/ANT-VP019_02.csv', sep = '')) %>% 
+  mutate(subid = 'VP019',
+         session = '3')
+sub.vp019.ses.04.pant <- read_csv(file = paste(path,'VP019_04/ANT-VP019_04.csv', sep = '')) %>% 
+  mutate(subid = 'VP019',
+         session = '4')
+
+sub.vp019 <- bind_rows(sub.vp019.ses.01.pant,sub.vp019.ses.03.pant,sub.vp019.ses.04.pant) 
+
+## CP001
+
+sub.cp001.ses.01.pant <- read_csv(file = paste(path,'CP001_01/ANT-CP001_01.csv', sep = '')) %>% 
+  mutate(subid = 'CP001',
+         session = '1')
+
+sub.cp001.ses.03.pant <- read_csv(file = paste(path,'CP001_03/ANT-CP001_03.csv', sep = '')) %>% 
+  mutate(subid = 'CP001',
+         session = '3')
+
+
+sub.cp001 <- bind_rows(sub.cp001.ses.01.pant,sub.cp001.ses.03.pant) 
+
+
+## CP002
+
+sub.cp002.ses.01.pant <- read_csv(file = paste(path,'CP002_01/ANT-CP002_01.csv', sep = '')) %>% 
+  mutate(subid = 'CP002',
+         session = '1')
+
+sub.cp002.ses.03.pant <- read_csv(file = paste(path,'CP002/ANT-CP002.csv', sep = '')) %>% 
+  mutate(subid = 'CP002',
+         session = '3')
+
+
+sub.cp002 <- bind_rows(sub.cp002.ses.01.pant,sub.cp002.ses.03.pant) 
+
+## CP003
+
+sub.cp003.ses.01.pant <- read_csv(file = paste(path,'CP003_01/ANT-CP003_01.csv', sep = '')) %>% 
+  mutate(subid = 'CP003',
+         session = '1')
+
+sub.cp003.ses.03.pant <- read_csv(file = paste(path,'CP003_03/ANT-CP003_03.csv', sep = '')) %>% 
+  mutate(subid = 'CP003',
+         session = '3')
+
+
+sub.cp003 <- bind_rows(sub.cp003.ses.01.pant,sub.cp003.ses.03.pant) 
+
+## CP004
+
+sub.cp004.ses.01.pant <- read_csv(file = paste(path,'CP004_01/ANT-CP004_01.csv', sep = '')) %>% 
+  mutate(subid = 'CP004',
+         session = '1')
+
+sub.cp004.ses.03.pant <- read_csv(file = paste(path,'CP004_03/ANT-CP004_03.csv', sep = '')) %>% 
+  mutate(subid = 'CP004',
+         session = '3')
+
+
+sub.cp004 <- bind_rows(sub.cp004.ses.01.pant,sub.cp004.ses.03.pant) 
+
+
+## CP006
+
+sub.cp006.ses.01.pant <- read_csv(file = paste(path,'CP006/ANT-CP006.csv', sep = '')) %>% 
+  mutate(subid = 'CP006',
+         session = '1')
+
+sub.cp006.ses.03.pant <- read_csv(file = paste(path,'CP006_03/ANT-CP006_03.csv', sep = '')) %>% 
+  mutate(subid = 'CP006',
+         session = '3')
+
+
+sub.cp006 <- bind_rows(sub.cp006.ses.01.pant,sub.cp006.ses.03.pant) 
+
+## CP007
+
+sub.cp007.ses.01.pant <- read_csv(file = paste(path,'CP007/ANT-CP007.csv', sep = '')) %>% 
+  mutate(subid = 'CP007',
+         session = '1')
+
+sub.cp007.ses.03.pant <- read_csv(file = paste(path,'CP007_03/ANT-CP007_03.csv', sep = '')) %>% 
+  mutate(subid = 'CP007',
+         session = '3')
+
+
+sub.cp007 <- bind_rows(sub.cp007.ses.01.pant,sub.cp007.ses.03.pant) 
+
+## CP008
+
+sub.cp008.ses.01.pant <- read_csv(file = paste(path,'CP008_01/ANT-CP008_01.csv', sep = '')) %>% 
+  mutate(subid = 'CP008',
+         session = '1')
+
+sub.cp008.ses.03.pant <- read_csv(file = paste(path,'CP008_03/ANT-CP008_03.csv', sep = '')) %>% 
+  mutate(subid = 'CP008',
+         session = '3')
+
+
+sub.cp008 <- bind_rows(sub.cp008.ses.01.pant,sub.cp008.ses.03.pant) 
+
+## CP009
+
+sub.cp009.ses.01.pant <- read_csv(file = paste(path,'CP009_01/ANT-CP009_01.csv', sep = '')) %>% 
+  mutate(subid = 'CP009',
+         session = '1')
+
+sub.cp009.ses.03.pant <- read_csv(file = paste(path,'CP009_03/ANT-CP009_03.csv', sep = '')) %>% 
+  mutate(subid = 'CP009',
+         session = '3')
+
+
+sub.cp009 <- bind_rows(sub.cp009.ses.01.pant,sub.cp009.ses.03.pant) 
+
+## CP010
+
+sub.cp010.ses.01.pant <- read_csv(file = paste(path,'CP010_01/ANT-CP010_01.csv', sep = '')) %>% 
+  mutate(subid = 'CP010',
+         session = '1')
+
+sub.cp010.ses.03.pant <- read_csv(file = paste(path,'CP010_03/ANT-CP010_03.csv', sep = '')) %>% 
+  mutate(subid = 'CP010',
+         session = '3')
+
+
+sub.cp010 <- bind_rows(sub.cp010.ses.01.pant,sub.cp010.ses.03.pant) 
+
+
+## CP011
+
+sub.cp011.ses.01.pant <- read_csv(file = paste(path,'CP011_01/ANT-CP011_01.csv', sep = '')) %>% 
+  mutate(subid = 'CP011',
+         session = '1')
+
+sub.cp011.ses.03.pant <- read_csv(file = paste(path,'CP011_03/ANT-CP011_03.csv', sep = '')) %>% 
+  mutate(subid = 'CP011',
+         session = '3')
+
+
+sub.cp011 <- bind_rows(sub.cp011.ses.01.pant,sub.cp011.ses.03.pant) 
+
+## Combine all data up to VP012
+
+data.to.vp012 <- bind_rows(sub.vp001, sub.vp002, sub.vp003, sub.vp004,sub.vp006,
+                           sub.vp007,sub.vp008,sub.vp009,
+                           sub.vp010,sub.vp011,sub.vp012,sub.vp013,sub.vp019, sub.cp001, sub.cp002, sub.cp003, sub.cp004, sub.cp006, sub.cp007, sub.cp008, sub.cp009, sub.cp010, sub.cp011) 
+
+## Load data from VP013
+manually_loaded <- c("VP001", "VP002", "VP003", "VP004", "VP006",
+                    "VP007","VP008","VP009","VP010","VP011","VP012","VP013","VP019","CP001", "CP002", "CP003", "CP004", "CP006", "CP007", "CP008", "CP009", "CP010", "CP011")
+
+path = "C:/Users/Jeane/Documents/PhD/Behavior_Analysis/PANT/"
+all.subject.folders <- list.files(path)
+subject.folders.from.vp013 <- all.subject.folders[!(all.subject.folders %in% manually_loaded)]
+
+data.from.vp013 <- map_df(list.files(path = paste(path,subject.folders.from.vp013,sep = ''), full.names = T, 
+                                     pattern = 'ANT-.*VP[0-9]*.*.csv', recursive = TRUE), read_csv) %>% 
+  separate(subnum, into = c('subid','session'),  remove = FALSE) %>%
+  mutate(session = str_remove(session,'0'))
+
+data_df <- read.delim(file = paste(bids_folder,'participants.tsv', sep = ''), header = T, 
+                      sep = '\t')
+
+data_df$subid <- data_df$participant_id
+
+all.data <- bind_rows(data.to.vp012, data.from.vp013)
+all.data <- left_join(all.data, data_df, by = 'subid') %>% 
+  mutate(group = case_when(group == 'lV1' ~ 'V1',
+                           group == 'rV1' ~ 'V1',
+                           group == 'rAIC' ~ 'rAIC',
+                           group == 'noFeedback' ~ 'noFeedback'))
+
+## Remove extreme values
+
+all.data2 <- all.data %>% 
+  filter(corr == 1)
+
+Q1 <- quantile(all.data2$rt,0.025)
+Q3 <- quantile(all.data2$rt,0.975)
+iqr = Q3-Q1
+
+all.data2 <- all.data2 %>%
+  subset(rt >= Q1& rt <= Q3)
+
+diff <- dim(all.data)[1]-dim(all.data2)[1]
+per <- diff/dim(all.data)[1]
+print(paste(per, "% of the data has been removed"))
+hist(all.data2$rt)
+
+## Data explore
+
+data.explore <- all.data2 %>% 
+  filter(practice != 1) %>% 
+  select(-subnum) %>% 
+  mutate(cue_type = as_factor(case_when(cue == 1 ~ 'no cue',
+                                        cue == 2 ~ 'center cue',
+                                        cue == 3 ~ 'double cue',
+                                        cue == 4 ~ 'spatial cue')),
+         congruence_type = as_factor(case_when(flankercoherence == -1 ~ 'Incongruent', flankercoherence == 0  ~ 'Neutral',flankercoherence == 1 ~ 'Congruent')),
+         corr_factor = as_factor(corr))
+
+
+summ_data_all <- data.explore %>%
+  group_by(subid,cue_type,congruence_type,session,group) %>% 
+  summarise(meanRT = mean(rt),
+            meanAcc = mean(corr))%>%
+  ungroup()
+
+summ_data_cue <- data.explore %>% 
+  group_by(subid,  cue_type, session,group) %>% 
+  summarise(meanRT = mean(rt),
+            meanAcc = mean(corr))
+
+summ_data_cue_corr <- data.explore %>% 
+  filter(corr == 1) %>% 
+  group_by(subid,  cue_type, session,group) %>% 
+  summarise(meanRT = mean(rt))
+
+summ_data_congruency <- data.explore %>% 
+  group_by(subid,  congruence_type, session,group) %>% 
+  summarise(meanRT = mean(rt),
+            meanAcc = mean(corr))
+
+summ_data_congruency_corr <- data.explore %>% 
+  filter(corr == 1) %>% 
+  group_by(subid,  congruence_type, session,group) %>% 
+  summarise(meanRT = mean(rt))
+
+
+data.explore %>% 
+  filter(corr == 1) %>% 
+  ggplot() +
+  aes(x = congruence_type, y = rt,  color = cue_type ) + 
+  geom_violin(position = position_dodge(1)) +
+  geom_boxplot(fill="white", position = position_dodge(1), width = 0.1) + 
+  facet_grid(subid~session) +
+  coord_flip() + 
+  theme_rtfmri2()
+data.explore
+
+data.explore %>% 
+  filter(corr == 1,
+         session != 4) %>% 
+  ggplot() +
+  aes(x = congruence_type, y = rt,  color = cue_type ) + 
+  geom_violin(position = position_dodge(1)) +
+  geom_boxplot(fill="white", position = position_dodge(1), width = 0.1) + 
+  facet_grid(session~.) +
+  coord_flip() + 
+  theme_rtfmri()
+
+data.explore
+
+
+
+# Subtractions for attentional networks according to ANT Paper
+
+## Alerting Effect ##
+
+### Only correct
+
+alert_data_corr <- data.explore %>% 
+  filter(corr == 1,
+         cue_type %in% c('double cue', 'no cue')) %>% 
+  group_by(cue_type, session, subid, group) %>% 
+  summarise(meanRT = mean(rt)) %>% 
+  ungroup() %>% 
+  pivot_wider(names_from = cue_type, values_from = meanRT) %>% 
+  mutate(alerting_effect = `no cue` - `double cue`)
+
+
+## Assumption test for mixed ANOVA
+
+alert_data_corr %>%
+  group_by(session,group) %>%
+  identify_outliers(alerting_effect)
+
+alert_data_corr %>%
+  group_by(session,group) %>%
+  shapiro_test(alerting_effect)
+
+ggqqplot(alert_data_corr, "alerting_effect", ggtheme = theme_bw())+
+  facet_grid(session~group)
+
+alert_data_corr %>%
+  group_by(session) %>%
+  levene_test(alerting_effect ~ group)
+
+box_m(alert_data_corr[, "alerting_effect", drop = FALSE], alert_data_corr$group)
+
+
+
+##Two-way mixed ANOVA
+
+
+alert_data_corr<- alert_data_corr%>%
+  convert_as_factor(subid, session,group)%>%
+  ungroup()
+
+
+two.way <- alert_data_corr%>%
+  anova_test(dv = alerting_effect, wid = subid, between = group,
+             within = session)
+  
+get_anova_table(two.way)
+
+
+## Post-hoc pairwise comparision following significant interaction
+
+pwc2 <- alert_data_corr %>%
+  group_by(group) %>%
+  pairwise_t_test(
+    alerting_effect ~ session, paired = TRUE, 
+    p.adjust.method = "bonferroni"
+  ) 
+pwc2
+
+
+#### Plot
+
+alert_data_corr %>% 
+  group_by(session,group) %>% 
+  summarise(meanAlertingEffect = mean(alerting_effect)) %>% 
+  ungroup() %>% 
+  ggplot() + 
+  aes(x = session, y = meanAlertingEffect, group = group, color = group, fill = group) +
+  geom_point(size = 3) + 
+  geom_line(size = 1) + 
+  geom_point(data = alert_data_corr,
+             aes(x = session, y = alerting_effect, group = interaction(group, subid),
+                 color = group), 
+                 alpha = 0.3) +
+  geom_line(data = alert_data_corr,
+             aes(x = session, y = alerting_effect, group = interaction(group, subid),
+                 color = group), 
+                 alpha = 0.3) + 
+  theme_rtfmri() +
+  ylim(c(-20,160)) + 
+  ylab('RT No Cue - RT Double Cue') +
+  ggtitle(label = '', subtitle = 'only correct responses') -> alerting_plot_corr
+  
+##alerting plot corr with errorbars
+
+label_session <- c("before NFB", "acute after NFB", "3-months after NFB")
+
+alert_data_corr %>% 
+  group_by(session,group) %>% 
+  summarise(meanAlertingEffect = mean(alerting_effect), se = sd(alerting_effect)/sqrt(length(alerting_effect))) %>% 
+  ungroup() %>% 
+  ggplot() + 
+  aes(x = session, y = meanAlertingEffect, group = group, color = group, fill = group) +
+  geom_point(size = 4) + 
+  geom_line(size = 2) + 
+  geom_errorbar(aes(ymin=meanAlertingEffect-se, ymax=meanAlertingEffect+se), width=.2)+
+  theme_rtfmri2() +
+  ylab('RT No Cue - RT Double Cue') +
+  scale_x_discrete(labels=label_session)+
+  ylim(c(0,100)) + 
+  ggtitle(label = 'Alerting Effect') -> alerting_plot_corr
+
+alerting_plot_corr
+
+### all trials
+
+alert_data <- data.explore %>% 
+  filter(cue_type %in% c('double cue', 'no cue')) %>% 
+  group_by(cue_type, session, subid, group) %>% 
+  summarise(meanRT = mean(rt)) %>% 
+  ungroup() %>% 
+  pivot_wider(names_from = cue_type, values_from = meanRT) %>% 
+  mutate(alerting_effect = `no cue` - `double cue`)
+
+#### Plot
+
+alert_data %>% 
+  group_by(session,group) %>% 
+  summarise(meanAlertingEffect = mean(alerting_effect)) %>% 
+  ungroup() %>% 
+  ggplot() + 
+  aes(x = session, y = meanAlertingEffect, group = group, color = group, fill = group) +
+  geom_point(size = 4) + 
+  geom_line(size = 2) + 
+  geom_point(data = alert_data,
+             aes(x = session, y = alerting_effect, group = interaction(group, subid),
+                 color = group), 
+             alpha = 0.3) +
+  geom_line(data = alert_data,
+            aes(x = session, y = alerting_effect, group = interaction(group, subid),
+                color = group), 
+            alpha = 0.3) + 
+  theme_rtfmri() +
+  ylab('RT No Cue - RT Double Cue') +
+  ylim(c(-20,160)) + 
+  ggtitle(label = 'Alerting Effect', subtitle = 'all responses') -> alerting_plot
+
+alert_data
+
+
+
+###Plot with Errorbar
+
+alert_data %>% 
+  group_by(session,group) %>% 
+  summarise(meanAlertingEffect = mean(alerting_effect), se = sd(alerting_effect)/sqrt(length(alerting_effect))) %>% 
+  ungroup() %>% 
+  ggplot() + 
+  aes(x = session, y = meanAlertingEffect, group = group, color = group, fill = group) +
+  geom_point(size = 4) + 
+  geom_line(size = 2) + 
+  geom_errorbar(aes(ymin=meanAlertingEffect-se, ymax=meanAlertingEffect+se), width=.2)+
+  theme_rtfmri2() +
+  ylab('RT No Cue - RT Double Cue') +
+  ylim(c(0,100))+
+  ggtitle(element_text('Alerting Effect', size = 20, hjust = 0.5))-> alerting_plot
+
+alerting_plot
+   
+
+
+
+## Orienting Effect ##
+
+### Only correct
+
+orienting_data_corr <- data.explore %>% 
+  filter(corr == 1,
+         cue_type %in% c('center cue', 'spatial cue')) %>% 
+  group_by(cue_type, session, subid, group) %>% 
+  summarise(meanRT = mean(rt)) %>% 
+  ungroup()%>%
+  pivot_wider(names_from = cue_type, values_from = meanRT) %>% 
+  mutate(orienting_effect = `center cue` - `spatial cue`)
+
+## Assumption test for mixed ANOVA
+
+orienting_data_corr %>%
+  group_by(session,group) %>%
+  identify_outliers(orienting_effect)
+
+orienting_data_corr %>%
+  group_by(session,group) %>%
+  shapiro_test(orienting_effect)
+
+ggqqplot(orienting_data_corr, "orienting_effect", ggtheme = theme_bw())+
+  facet_grid(session~group)
+
+
+box_m(orienting_data_corr[, "orienting_effect", drop = FALSE], alert_data_corr$group)
+
+
+## Two-way mixed ANOVA
+
+
+orienting_data_corr%>%
+  convert_as_factor(subid, session)%>%
+  ungroup()
+
+res.aov <- anova_test(
+  data = orienting_data_corr, dv = orienting_effect, wid = subid,
+  between = group, within = session
+)
+get_anova_table(res.aov)
+
+
+
+#### Plot
+
+orienting_data_corr %>% 
+  group_by(session,group) %>% 
+  summarise(meanOrientingEffect = mean(orienting_effect)) %>% 
+  ungroup() %>% 
+  ggplot() + 
+  aes(x = session, y = meanOrientingEffect, group = group, color = group, fill = group) +
+  geom_point(size = 3) + 
+  geom_line(size = 1) + 
+  geom_point(data = orienting_data_corr,
+             aes(x = session, y =orienting_effect, group = interaction(group, subid),
+                 color = group), 
+             alpha = 0.3) +
+  geom_line(data = orienting_data_corr,
+            aes(x = session, y = orienting_effect, group = interaction(group, subid),
+                color = group), 
+            alpha = 0.3) + 
+  theme_rtfmri2() +
+  ylab('RT Center Cue - RT Spatial Cue') +
+  ylim(c(-20,100)) + 
+  ggtitle(label = '', subtitle = 'only correct responses') -> orienting_plot_corr
+
+orienting_plot_corr
+
+
+### all trials
+
+orienting_data <- data.explore %>% 
+  filter(cue_type %in% c('center cue', 'spatial cue')) %>% 
+  group_by(cue_type, session, subid, group) %>% 
+  summarise(meanRT = mean(rt)) %>% 
+  ungroup() %>% 
+  pivot_wider(names_from = cue_type, values_from = meanRT) %>% 
+  mutate(orienting_effect = `center cue` - `spatial cue`)
+
+#### Plot
+
+orienting_data %>% 
+  group_by(session,group) %>% 
+  summarise(meanOrientingEffect = mean(orienting_effect)) %>% 
+  ungroup() %>% 
+  ggplot() + 
+  aes(x = session, y = meanOrientingEffect, group = group, color = group, fill = group) +
+  geom_point(size = 3) + 
+  geom_line(size = 1) + 
+  geom_point(data = orienting_data,
+             aes(x = session, y = orienting_effect, group = interaction(group, subid),
+                 color = group), 
+             alpha = 0.3) +
+  geom_line(data = orienting_data,
+            aes(x = session, y = orienting_effect, group = interaction(group, subid),
+                color = group), 
+            alpha = 0.3) + 
+  theme_rtfmri() +
+  ylab('RT Center Cue - RT Spatial Cue') +
+  ylim(c(-20,100)) + 
+  ggtitle(label = 'Orienting Effect ' , subtitle = 'all responses') -> orienting_plot
+
+orienting_data
+
+
+## Executive control ##
+
+
+### Only correct
+
+conflict_data_corr <- data.explore %>% 
+  filter(corr == 1,
+         congruence_type %in% c('Congruent', 'Incongruent')) %>% 
+  group_by(congruence_type, session, subid, group) %>% 
+  summarise(meanRT = mean(rt)) %>% 
+  ungroup()%>%
+  pivot_wider(names_from = congruence_type, values_from = meanRT) %>% 
+  mutate(conflict_effect = Incongruent - Congruent)
+  
+  
+  conflict_data_corr%>%
+    convert_as_factor(subid, session)%>%
+    ungroup()
+  
+### Assumption test for mixed ANOVA
+  
+ conflict_data_corr %>%
+    group_by(session,group) %>%
+    identify_outliers(conflict_effect)
+  
+ conflict_data_corr %>%
+    group_by(session,group) %>%
+    shapiro_test(conflict_effect)
+  
+  ggqqplot(conflict_data_corr, "conflict_effect", ggtheme = theme_bw())+
+    facet_grid(session~group)
+  
+  conflict_data_corr %>%
+    group_by(session) %>%
+    levene_test(conflict_effect ~ group)
+  
+  box_m(conflict_data_corr[, "conflict_effect", drop = FALSE], alert_data_corr$group)
+  
+  
+### Two-way mixed ANOVA
+  
+  res.aov <- anova_test(
+    data = conflict_data_corr, dv = conflict_effect, wid = subid,
+    between = group, within = session
+  )
+  get_anova_table(res.aov)
+  
+  
+#### Plot
+
+conflict_data_corr %>% 
+  group_by(session,group) %>% 
+  summarise(meanConflictEffect = mean(conflict_effect)) %>% 
+  ungroup() %>% 
+  ggplot() + 
+  aes(x = session, y = meanConflictEffect, group = group, color = group, fill = group) +
+  geom_point(size = 3) + 
+  geom_line(size = 1) + 
+  geom_point(data = conflict_data_corr,
+             aes(x = session, y = conflict_effect, group = interaction(group, subid),
+                 color = group), 
+             alpha = 0.3) +
+  geom_line(data = conflict_data_corr,
+            aes(x = session, y = conflict_effect, group = interaction(group, subid),
+                color = group), 
+            alpha = 0.3) + 
+  theme_rtfmri2() +
+  ylim(c(0,160)) + 
+  ylab('RT Incongruent - RT Congruent') +
+  ggtitle(label = '', subtitle = 'only correct responses') -> conflict_plot_corr
+
+conflict_plot_corr
+
+
+### all trials
+
+conflict_data <- data.explore %>% 
+  filter(congruence_type %in% c('Congruent', 'Incongruent')) %>% 
+  group_by(congruence_type, session, subid, group) %>% 
+  summarise(meanRT = mean(rt)) %>% 
+  ungroup() %>% 
+  pivot_wider(names_from = congruence_type, values_from = meanRT) %>% 
+  mutate(conflict_effect = Incongruent - Congruent)
+
+#### Plot
+
+conflict_data %>% 
+  group_by(session,group) %>% 
+  summarise(meanConflictEffect = mean(conflict_effect)) %>% 
+  ungroup() %>% 
+  ggplot() + 
+  aes(x = session, y = meanConflictEffect, group = group, color = group, fill = group) +
+  geom_point(size = 3) + 
+  geom_line(size = 1) + 
+  geom_point(data = conflict_data,
+             aes(x = session, y = conflict_effect, group = interaction(group, subid),
+                 color = group), 
+             alpha = 0.3) +
+  geom_line(data = conflict_data,
+            aes(x = session, y = conflict_effect, group = interaction(group, subid),
+                color = group), 
+            alpha = 0.3) + 
+  theme_rtfmri2() +
+  ylim(c(0,160)) + 
+  ylab('RT Congruent - RT Incongruent') +
+  ggtitle(label = 'Conflict (Executive control) Effect', subtitle = 'all responses') -> conflict_plot
+
+
+
+
+
+
+
+
+
+

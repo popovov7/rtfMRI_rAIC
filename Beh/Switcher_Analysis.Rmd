@@ -1,0 +1,543 @@
+---
+title: "Switcher"
+author: "Jeanette Popovova"
+date: "1/27/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# 1. Load data 
+
+```{r, warning=FALSE, echo=FALSE, error=TRUE, include=FALSE}
+### Libraries
+library(tidyverse) # for data wrangling and plotting
+
+source('rtfmri_theme.R')
+
+
+
+path = 'C:/Users/Jeane/Documents/PhD/Behavior_Analysis/switcherwrongName/'
+
+bids_folder = 'C:/Users/Jeane/Documents/PhD/Behavior_Analysis/'
+
+### Messy naming conventions up to participant 12 
+
+## Manual wrangling
+
+## VP006
+
+sub.vp006.ses.01.switcher <- read_csv(file = paste(path,'jVP006_1/switch-summary-jVP006_1.csv', sep = '')) %>% 
+  mutate(subid = 'VP006',
+         session = '1')
+
+sub.vp006.ses.03.switcher <- read_csv(file = paste(path,'VP006_03/switch-summary-VP006_03.csv', sep = '')) %>% 
+  mutate(subid = 'VP006',
+         session = '3')
+
+sub.vp006.ses.04.switcher <- read_csv(file = paste(path,'VP006_04/switch-summary-VP006_04.csv', sep = '')) %>% 
+  mutate(subid = 'VP006',
+         session = '4')
+
+
+sub.vp006.switcher <- bind_rows(sub.vp006.ses.01.switcher,sub.vp006.ses.03.switcher, sub.vp006.ses.04.switcher) 
+
+sub.vp006.switcher$matchlast <- as.numeric(sub.vp006.switcher$matchlast)
+## VP007
+
+sub.vp007.ses.01.switcher <- read_csv(file = paste(path,'VP007_01/switch-summary-VP007_01.csv', sep = '')) %>% 
+  mutate(subid = 'VP007',
+         session = '1')
+
+sub.vp007.ses.03.switcher <- read_csv(file = paste(path,'VP007_02/switch-summary-VP007_02.csv', sep = '')) %>% 
+  mutate(subid = 'VP007',
+         session = '3')
+
+sub.vp007.ses.04.switcher <- read_csv(file = paste(path,'VP007_04/switch-summary-VP007_04.csv', sep = '')) %>% 
+  mutate(subid = 'VP007',
+         session = '4')
+
+
+sub.vp007.switcher <- bind_rows(sub.vp007.ses.01.switcher,sub.vp007.ses.03.switcher, sub.vp007.ses.04.switcher) 
+sub.vp007.switcher$matchlast <- as.numeric(sub.vp007.switcher$matchlast)
+
+## VP008
+
+sub.vp008.ses.01.switcher <- read_csv(file = paste(path,'VP008_01/switch-summary-VP008_01.csv', sep = '')) %>% 
+  mutate(subid = 'VP008',
+         session = '1')
+
+sub.vp008.ses.03.switcher <- read_csv(file = paste(path,'VP008_02/switch-summary-VP008_02.csv', sep = '')) %>% 
+  mutate(subid = 'VP008',
+         session = '3')
+
+sub.vp008.ses.04.switcher <- read_csv(file = paste(path,'VP008_04/switch-summary-VP008_04.csv', sep = '')) %>% 
+  mutate(subid = 'VP008',
+         session = '4')
+
+sub.vp008.switcher <- bind_rows(sub.vp008.ses.01.switcher,sub.vp008.ses.03.switcher, sub.vp008.ses.04.switcher) 
+sub.vp008.switcher$matchlast <- as.numeric(sub.vp008.switcher$matchlast)
+## VP009
+
+sub.vp009.ses.01.switcher <- read_csv(file = paste(path,'VP009_01/switch-summary-VP009_01.csv', sep = '')) %>% 
+  mutate(subid = 'VP009',
+         session = '1') %>%
+  mutate(matchlast = as.numeric(case_when(matchlast == '0NA' ~ '0',
+                                          T ~ matchlast)))
+
+sub.vp009.ses.03.switcher <- read_csv(file = paste(path,'VP009_02/switch-summary-VP009_02.csv', sep = '')) %>% 
+  mutate(subid = 'VP009',
+         session = '3')
+
+sub.vp009.ses.04.switcher <- read_csv(file = paste(path,'VP009_04/switch-summary-VP009_04.csv', sep = '')) %>% 
+  mutate(subid = 'VP009',
+         session = '4')
+
+sub.vp009.switcher <- bind_rows(sub.vp009.ses.01.switcher,sub.vp009.ses.03.switcher, sub.vp009.ses.04.switcher) 
+
+sub.vp009.switcher$matchlast <- as.numeric(sub.vp009.switcher$matchlast)
+## VP010
+
+sub.vp010.ses.01.switcher <- read_csv(file = paste(path,'VP010_01/switch-summary-VP010_01.csv', sep = '')) %>% 
+  mutate(subid = 'VP010',
+         session = '1')
+
+sub.vp010.ses.03.switcher <- read_csv(file = paste(path,'VP010_2/switch-summary-VP010_2.csv', sep = '')) %>% 
+  mutate(subid = 'VP010',
+         session = '3')
+
+sub.vp010.ses.04.switcher <- read_csv(file = paste(path,'VP010_04/switch-summary-VP010_04.csv', sep = '')) %>% 
+  mutate(subid = 'VP010',
+         session = '4')
+
+sub.vp010.switcher <- bind_rows(sub.vp010.ses.01.switcher,sub.vp010.ses.03.switcher, sub.vp010.ses.04.switcher) 
+
+sub.vp010.switcher$matchlast <- as.numeric(sub.vp010.switcher$matchlast)
+
+## VP011
+
+sub.vp011.ses.01.switcher <- read_csv(file = paste(path,'VP011/switch-summary-VP011.csv', sep = '')) %>% 
+  mutate(subid = 'VP011',
+         session = '1')
+
+sub.vp011.ses.03.switcher <- read_csv(file = paste(path,'VP011_02/switch-summary-VP011_02.csv', sep = '')) %>% 
+  mutate(subid = 'VP011',
+         session = '3')
+
+sub.vp011.ses.04.switcher <- read_csv(file = paste(path,'VP011_04/switch-summary-VP011_04.csv', sep = '')) %>% 
+  mutate(subid = 'VP011',
+         session = '4')
+
+sub.vp011.switcher <- bind_rows(sub.vp011.ses.01.switcher,sub.vp011.ses.03.switcher,sub.vp011.ses.04.switcher) 
+sub.vp011.switcher$matchlast <- as.numeric(sub.vp011.switcher$matchlast)
+## VP012
+
+sub.vp012.ses.01.switcher <- read_csv(file = paste(path,'VP012_01/switch-summary-VP012_01.csv', sep = '')) %>% 
+  mutate(subid = 'VP012',
+         session = '1')
+
+sub.vp012.ses.03.switcher <- read_csv(file = paste(path,'VP012_02/switch-summary-VP012_02.csv', sep = '')) %>% 
+  mutate(subid = 'VP012',
+         session = '3')
+
+sub.vp012.ses.04.switcher <- read_csv(file = paste(path,'VP012_04/switch-summary-VP012_04.csv', sep = '')) %>% 
+  mutate(subid = 'VP012',
+         session = '4')
+
+sub.vp012.switcher <- bind_rows(sub.vp012.ses.01.switcher,sub.vp012.ses.03.switcher,sub.vp012.ses.04.switcher) 
+sub.vp012.switcher$matchlast <- as.numeric(sub.vp012.switcher$matchlast)
+## VP013
+
+sub.vp013.ses.01.switcher <- read_csv(file = paste(path,'VP013_01/switch-summary-VP013_01.csv', sep = '')) %>% 
+  mutate(subid = 'VP013',
+         session = '1') 
+
+sub.vp013.ses.03.switcher <- read_csv(file = paste(path,'VP013_02/switch-summary-VP013_03.csv', sep = '')) %>% 
+  mutate(subid = 'VP013',
+         session = '3')%>%
+  mutate(matchlast=as.numeric(matchlast))
+
+
+sub.vp013.ses.04.switcher <- read_csv(file = paste(path,'VP013_04/switch-summary-VP013_04.csv', sep = '')) %>% 
+  mutate(subid = 'VP013',
+         session = '4')
+
+sub.vp013.switcher <- bind_rows(sub.vp013.ses.01.switcher,sub.vp013.ses.03.switcher,sub.vp013.ses.04.switcher) 
+sub.vp013.switcher$matchlast <- as.numeric(sub.vp013.switcher$matchlast)
+
+
+## VP019
+
+sub.vp019.ses.01.switcher <- read_csv(file = paste(path,'VP019_01/switch-summary-VP019_01.csv', sep = '')) %>% 
+  mutate(subid = 'VP019',
+         session = '1')
+
+sub.vp019.ses.03.switcher <- read_csv(file = paste(path,'VP019_02/switch-summary-VP019_02.csv', sep = '')) %>% 
+  mutate(subid = 'VP019',
+         session = '3')
+
+sub.vp019.ses.04.switcher <- read_csv(file = paste(path,'VP019_04/switch-summary-VP019_04.csv', sep = '')) %>% 
+  mutate(subid = 'VP019',
+         session = '4')
+
+sub.vp019.switcher <- bind_rows(sub.vp019.ses.01.switcher,sub.vp019.ses.03.switcher,sub.vp019.ses.04.switcher) 
+
+sub.vp019.switcher$matchlast <- as.numeric(sub.vp019.switcher$matchlast)
+
+
+## CP001
+
+sub.cp001.ses.01.switcher <- read_csv(file = paste(path,'CP001_01/switch-summary-CP001_01.csv', sep = '')) %>% 
+  mutate(subid = 'CP001',
+         session = '1')%>%
+  mutate(matchlast = as.numeric(case_when(matchlast == '0NA' ~ '0',
+                                          T ~ matchlast)))
+
+sub.cp001.ses.03.switcher <- read_csv(file = paste(path,'CP001_03/switch-summary-CP001_03.csv', sep = '')) %>% 
+  mutate(subid = 'CP001',
+         session = '3')
+
+sub.cp001.ses.01.switcher$matchlast<- as.numeric(sub.cp001.ses.01.switcher$matchlast)
+
+sub.cp001.switcher <- bind_rows(sub.cp001.ses.01.switcher,sub.cp001.ses.03.switcher) 
+
+sub.cp001.switcher$matchlast <- as.numeric(sub.cp001.switcher$matchlast)
+
+## CP002
+
+sub.cp002.ses.01.switcher <- read_csv(file = paste(path,'CP002_01/switch-summary-CP002_01.csv', sep = '')) %>% 
+  mutate(subid = 'CP002',
+         session = '1')
+
+sub.cp002.ses.03.switcher <- read_csv(file = paste(path,'CP002/switch-summary-CP002.csv', sep = '')) %>% 
+  mutate(subid = 'CP002',
+         session = '3')
+
+
+
+sub.cp002.switcher <- bind_rows(sub.cp002.ses.01.switcher,sub.cp002.ses.03.switcher) 
+
+sub.cp002.switcher$matchlast <- as.numeric(sub.cp002.switcher$matchlast)
+
+
+## CP003
+
+sub.cp003.ses.01.switcher <- read_csv(file = paste(path,'CP003_01/switch-summary-CP003_01.csv', sep = '')) %>% 
+  mutate(subid = 'CP003',
+         session = '1')
+
+sub.cp003.ses.03.switcher <- read_csv(file = paste(path,'CP003_03/switch-summary-CP003_03.csv', sep = '')) %>% 
+  mutate(subid = 'CP003',
+         session = '3')
+
+
+
+sub.cp003.switcher <- bind_rows(sub.cp003.ses.01.switcher,sub.cp003.ses.03.switcher) 
+
+sub.cp003.switcher$matchlast <- as.numeric(sub.cp003.switcher$matchlast)
+
+## CP004
+
+sub.cp004.ses.01.switcher <- read_csv(file = paste(path,'CP004_01/switch-summary-CP004_01.csv', sep = '')) %>% 
+  mutate(subid = 'CP004',
+         session = '1') %>%
+  mutate(matchlast = as.numeric(case_when(matchlast == '0NA' ~ '0',
+                                   T ~ matchlast)))
+
+sub.cp004.ses.03.switcher <- read_csv(file = paste(path,'CP004_03/switch-summary-CP004_03.csv', sep = '')) %>% 
+  mutate(subid = 'CP004',
+         session = '3')
+
+
+
+sub.cp004.switcher <- bind_rows(sub.cp004.ses.01.switcher,sub.cp004.ses.03.switcher) 
+
+sub.cp004.switcher$matchlast <- as.numeric(sub.cp004.switcher$matchlast)
+
+## CP006
+
+sub.cp006.ses.01.switcher <- read_csv(file = paste(path,'CP006/switch-summary-CP006.csv', sep = '')) %>% 
+  mutate(subid = 'CP006',
+         session = '1') %>%
+         mutate(matchlast = as.numeric(case_when(matchlast == '0NA' ~ '0',
+                                                         T ~ matchlast)))
+
+sub.cp006.ses.03.switcher <- read_csv(file = paste(path,'CP006_03/switch-summary-CP006_03.csv', sep = '')) %>% 
+  mutate(subid = 'CP006',
+         session = '3')
+
+
+
+sub.cp006.switcher <- bind_rows(sub.cp006.ses.01.switcher,sub.cp006.ses.03.switcher) 
+
+sub.cp006.switcher$matchlast <- as.numeric(sub.cp006.switcher$matchlast)
+
+## CP007
+
+sub.cp007.ses.01.switcher <- read_csv(file = paste(path,'CP007/switch-summary-CP007.csv', sep = '')) %>% 
+  mutate(subid = 'CP007',
+         session = '1')
+
+sub.cp007.ses.03.switcher <- read_csv(file = paste(path,'CP007_03/switch-summary-CP007_03.csv', sep = '')) %>% 
+  mutate(subid = 'CP007',
+         session = '3')
+
+
+
+sub.cp007.switcher <- bind_rows(sub.cp007.ses.01.switcher,sub.cp007.ses.03.switcher) 
+
+sub.cp007.switcher$matchlast <- as.numeric(sub.cp007.switcher$matchlast)
+
+## CP008
+
+sub.cp008.ses.01.switcher <- read_csv(file = paste(path,'CP008_01/switch-summary-CP008_01.csv', sep = '')) %>% 
+  mutate(subid = 'CP008',
+         session = '1')
+
+sub.cp008.ses.03.switcher <- read_csv(file = paste(path,'CP008_03/switch-summary-CP008_03.csv', sep = '')) %>% 
+  mutate(subid = 'CP008',
+         session = '3')
+
+
+
+sub.cp008.switcher <- bind_rows(sub.cp008.ses.01.switcher,sub.cp008.ses.03.switcher) 
+
+sub.cp008.switcher$matchlast <- as.numeric(sub.cp008.switcher$matchlast)
+
+## CP009
+
+sub.cp009.ses.01.switcher <- read_csv(file = paste(path,'CP009_01/switch-summary-CP009_01.csv', sep = '')) %>% 
+  mutate(subid = 'CP009',
+         session = '1')
+
+sub.cp009.ses.03.switcher <- read_csv(file = paste(path,'CP009_03/switch-summary-CP009_03.csv', sep = '')) %>% 
+  mutate(subid = 'CP009',
+         session = '3') %>%
+  mutate(matchlast = as.numeric(case_when(matchlast == '0NA' ~ '0',
+                                          T ~ matchlast)))
+
+
+
+sub.cp009.switcher <- bind_rows(sub.cp009.ses.01.switcher,sub.cp009.ses.03.switcher) 
+
+sub.cp009.switcher$matchlast <- as.numeric(sub.cp009.switcher$matchlast)
+
+## CP010
+
+sub.cp010.ses.01.switcher <- read_csv(file = paste(path,'CP010_01/switch-summary-CP010_01.csv', sep = '')) %>% 
+  mutate(subid = 'CP010',
+         session = '1')
+
+sub.cp010.ses.03.switcher <- read_csv(file = paste(path,'CP010_03/switch-summary-CP010_03.csv', sep = '')) %>% 
+  mutate(subid = 'CP010',
+         session = '3')
+
+
+
+sub.cp010.switcher <- bind_rows(sub.cp010.ses.01.switcher,sub.cp010.ses.03.switcher) 
+
+sub.cp010.switcher$matchlast <- as.numeric(sub.cp010.switcher$matchlast)
+
+## CP011
+
+sub.cp011.ses.01.switcher <- read_csv(file = paste(path,'CP011_01/switch-summary-CP011_01.csv', sep = '')) %>% 
+  mutate(subid = 'CP011',
+         session = '1') %>%
+  mutate(matchlast = as.numeric(case_when(matchlast == '0NA' ~ '0',
+                                   T ~ matchlast)))
+
+sub.cp011.ses.03.switcher <- read_csv(file = paste(path,'CP011_03/switch-summary-CP011_03.csv', sep = '')) %>% 
+  mutate(subid = 'CP011',
+         session = '3')
+
+
+
+sub.cp011.switcher <- bind_rows(sub.cp011.ses.01.switcher,sub.cp011.ses.03.switcher) 
+
+sub.cp011.switcher$matchlast <- as.numeric(sub.cp011.switcher$matchlast)
+
+## Combine all data up to VP013
+
+data.to.vp012.switcher <- bind_rows(sub.vp006.switcher,                             sub.vp007.switcher,sub.vp008.switcher,sub.vp009.switcher,                        sub.vp010.switcher,sub.vp011.switcher,sub.vp012.switcher, sub.vp013.switcher, sub.vp019.switcher, sub.cp001.switcher, sub.cp002.switcher, sub.cp003.switcher, sub.cp004.switcher, sub.cp007.switcher,sub.cp008.switcher, sub.cp009.switcher, sub.cp010.switcher, sub.cp011.switcher) 
+
+```
+
+```{r, warning=FALSE, message=FALSE, include=FALSE}
+## Load data from VP013
+manually_loaded <- c("VP006",
+                     "VP007","VP008","VP009","VP010","VP011","VP012", "VP013", "VP019", "CP001", "CP002", "CP003", "CP004", "CP007", "CP008", "CP009", "CP010", "CP011")
+
+
+
+
+path = "C:/Users/Jeane/Documents/PhD/Behavior_Analysis/switcher/"
+
+all.subject.folders <- list.files(path)
+subject.folders.from.vp014.switcher <- all.subject.folders[!(all.subject.folders %in% manually_loaded)]
+
+
+
+files.from.vp014.switcher <- list.files(path = paste(path,subject.folders.from.vp014.switcher,sep = ''), full.names = T, 
+                                     pattern = 'switch-summary-.*VP[0-9]*.*.csv', recursive = TRUE)
+
+
+data.from.vp014.switcher <- files.from.vp014.switcher %>% 
+  map_df(~read_csv(.,col_types = cols(
+    matchlast = col_character()
+  ))) %>% 
+  separate(subNum, into = c('subid','session'),  remove = FALSE) %>%
+  mutate(session = str_remove(session,'0'),
+         matchlast = as.numeric(case_when(matchlast == '0NA' ~ '0',
+                                          T ~ matchlast)))
+
+
+data_df <- read.delim(file = paste(bids_folder,'participants.tsv', sep = ''), header = T, 
+                      sep = '\t')
+
+data_df$subid <- data_df$participant_id
+
+# Get all the switcher data
+
+all.data.switcher <- bind_rows(data.to.vp012.switcher, data.from.vp014.switcher)
+
+all.data.switcher <- inner_join(all.data.switcher, data_df, by = 'subid') %>% 
+  mutate(group = case_when(group == 'lV1' ~ 'V1',
+                           group == 'rV1' ~ 'V1',
+                           group == 'rAIC' ~ 'rAIC',
+                           group == 'noFeedback' ~ 'noFeedback'))
+
+```
+
+# 2. Compute Mean of Errors and response time
+
+```{r, warning=FALSE, message=FALSE}
+summarized_switcher <- all.data.switcher %>% 
+  group_by(testtype, subid, session, group) %>% 
+  summarise(numErr = mean(numerr),
+            matchlast = mean(matchlast),
+            tooslow = mean(tooslow),
+            waittime = mean(waittime),
+            perftime = mean(perftime),
+            medtime = mean(medtime))
+
+```
+
+# 3. Plot Error and Response time
+
+```{r, message=FALSE}
+#perftime
+
+summarized_switcher %>% 
+  group_by(testtype, session, group) %>% 
+  summarise(meanPerfTime = mean(perftime),
+            meanNumErr = mean(numErr)) %>% 
+  ungroup() %>% 
+  ggplot() + 
+  aes(x = session, y = meanPerfTime, group = group, color = group) + 
+  geom_point(size = 3) + 
+  geom_line(size = 1) + 
+  geom_point(data = summarized_switcher,
+             aes(x = session, y = perftime, group = interaction(group, subid),
+                 color = group), 
+             alpha = 0.3) +
+  geom_line(data = summarized_switcher,
+            aes(x = session, y = perftime, group = interaction(group, subid),
+                color = group), 
+            alpha = 0.3) + 
+  theme_rtfmri() + 
+  ggtitle(label = 'Mean Performance Time') + 
+  facet_wrap(.~testtype)
+
+#number of errors
+
+summarized_switcher %>% 
+  group_by(testtype, session, group) %>% 
+  summarise(meanPerfTime = mean(perftime),
+            meanNumErr = mean(numErr)) %>% 
+  ungroup() %>% 
+  ggplot() + 
+  aes(x = session, y = meanNumErr, group = group, color = group) + 
+  geom_point(size = 3) + 
+  geom_line(size = 1) + 
+  geom_point(data = summarized_switcher,
+             aes(x = session, y = numErr, group = interaction(group, subid),
+                 color = group), 
+             alpha = 0.3) +
+  geom_line(data = summarized_switcher,
+            aes(x = session, y = numErr, group = interaction(group, subid),
+                color = group), 
+            alpha = 0.3) + 
+  theme_rtfmri() + 
+  ggtitle(label = 'Mean Number of Errors') + 
+  facet_wrap(.~testtype)
+```
+
+# 4. Stats
+
+## 4.1 Check assumptions
+
+### 4.1.1 Outlier
+
+
+```{r, warning=FALSE}
+
+library(ggpubr)
+
+library(rstatix)
+summarized_switcher%>%
+  group_by(session,group) %>%
+  identify_outliers(numErr)
+
+```
+
+There are no extreme outlier
+
+### 4.1.2 Normality assumption
+
+```{r, warning=FALSE}
+summarized_switcher %>%
+  group_by(session,group) %>%
+  shapiro_test(numErr)
+
+ggqqplot(summarized_switcher, "numErr", ggtheme = theme_bw())+
+  facet_grid(session~group)
+
+```
+
+rAIC Session 01 is slightly not normal distributed
+
+### 4.1.3 Homogeneity of variance
+
+```{r, warning=FALSE}
+summarized_switcher %>%
+  group_by(session) %>%
+  levene_test(numErr ~ group)
+```
+
+There is homogeneity of variances, as assessed by Levene's test (p > 0.05)
+
+```{r, warning=FALSE}
+box_m(summarized_switcher[, "numErr", drop = FALSE], summarized_switcher$group)
+
+```
+
+There was homogeneity of covariances, as assessed by Box’s test of equality of covariance matrices (p > 0.001).
+
+## 4.2 Stats - non-parametric two-way ANOVA (robust ANOVA)
+
+```{r}
+if(!require(WRS2)){install.packages("WRS2")}
+if(!require(multcompView)){install.packages("multcompView")}
+if(!require(psych)){install.packages("psych")}
+library(WRS2)
+
+pbad2way(numErr ~ group + session + group:session,
+         data = summarized_switcher,
+         est = "mom",    # modified M-estimator
+         nboot = 5000)   # number of bootstrap samples
+                         # a higher number will take longer to compute
+```
+
+

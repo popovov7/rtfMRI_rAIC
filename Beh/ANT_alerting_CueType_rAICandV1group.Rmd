@@ -1,0 +1,157 @@
+---
+title: "ANT_analysis_CueType"
+author: "Jeanette Popovova"
+date: "1/24/2022"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+### Libraries
+library(tidyverse) # for data wrangling and plotting
+library(ggpubr)
+library(rstatix)
+```
+
+#Alerting Effect Analysis
+
+
+## 1. Loading and prepare ANT data
+
+
+```{r cars}
+Alert <- read.csv("C:/Users/Jeane/Documents/PhD/Analysis_Paper1/NFB/Beh/final_Values_used/Alert_long.csv")
+
+```
+
+## Get summary 
+
+
+
+```{r pressure, echo=FALSE}
+Alert2_wide %>%
+   group_by(group, type, session) %>%
+   get_summary_stats(value, type = "mean_sd")
+```
+
+## 2. Test for Assumptions
+```{r}
+##Outliers
+
+Alert2_wide %>%
+  group_by(group, type, session) %>%
+  identify_outliers(value)
+
+
+## Normality
+
+ 
+ggqqplot(Alert2_wide, "value", ggtheme = theme_bw()) +
+  facet_grid(group + type ~ session, labeller = "label_both")
+
+##Homogenity
+
+Alert2_wide %>%
+  group_by(group, session) %>%
+  levene_test(value ~ type)
+
+```
+
+
+## 3. Get Boxplot
+
+```{r}
+Alert2_wide<-Alert2_wide%>%
+  ungroup()
+
+bxp <- ggplot(Alert2_wide, aes(x = group, y = value,
+  colour = factor(session)))+
+   geom_boxplot()+ facet_grid(cols = vars(type))
+
+
+bxp
+
+# Alert2_wide<- Alert2_wide%>%
+#   subset(group!= 'noFeedback')
+```
+
+
+## 4. Mixed Model ANOVA Three-way (within-subject: session, type / between-subject: group)
+
+```{r}
+Alert2_wide$type<- as.factor(Alert2_wide$type)
+Alert2_wide$session <- as.factor(Alert2_wide$session)
+Alert2_wide$group <- as.factor(Alert2_wide$group)
+Alert2_wide$subid <- as.factor(Alert2_wide$subid)
+
+Alert2_wide <-Alert2_wide%>%
+  ungroup()
+
+ res.aov <- anova_test(
+   data = Alert2_wide, dv = value, wid = subid,
+   between = group, within = c(type, session)
+ )
+
+get_anova_table(res.aov)
+ 
+ ##There is a three way interaction, now we compute simple two-way interaction between type and session for each group
+```
+
+There is a three way interaction between group, session and CueType, now we compute simple two-way interaction between type and session for each group
+
+
+
+```{r}
+ two.way <- Alert2_wide %>%
+   group_by(group) %>%
+   anova_test(dv = value, wid = subid, within = c(type, session))
+ two.way
+ 
+ # Extract anova table
+ get_anova_table(two.way)
+ 
+```
+ 
+There was a statistically significant simple two-way interaction between type and session for the rAIC group but not V1
+
+Now we can compute simple main effect of type at every level of session for th rAIC 
+ 
+ 
+```{r}
+ 
+ ##Now we can compute simple main effect of type at every level of session for th rAIC 
+ time.effect <- Alert2_wide %>%
+   group_by(group, type) %>%
+   anova_test(dv = value, wid = subid, within = session) %>%
+   get_anova_table()
+ time.effect %>% filter(group == "rAIC")
+ 
+#The simple main effect of session was significant for type:double cue
+ 
+ pwc <- Alert2_wide %>%
+   group_by(group, type) %>%
+   pairwise_t_test(
+     value ~ session, paired = TRUE, 
+     p.adjust.method = "bonferroni"
+   )
+ pwc %>% filter(group == "rAIC") %>%
+   select(-p)    # Remove p column
+```
+
+
+## 5. Boxplot with Effects
+
+```{r}
+ pwc <- pwc %>% add_xy_position(x = "group")
+ pwc.filtered <- pwc %>% filter(group == "rAIC")
+ bxp + 
+   stat_pvalue_manual(pwc.filtered, tip.length = 0, hide.ns = TRUE) +
+   labs(
+     subtitle = get_test_label(res.aov, detailed = TRUE),
+     caption = get_pwc_label(pwc)
+   )
+ 
+```
+
